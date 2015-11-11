@@ -1,13 +1,19 @@
 package DAO;
 
-/**
- * Created by sjnao on 11/9/15.
- */
 public class Response {
 
+    private User user;
     private String access_Token;
     private String refresh_Token;
     private String type;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getAccess_Token() {
         return access_Token;

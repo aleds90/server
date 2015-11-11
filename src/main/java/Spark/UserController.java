@@ -2,10 +2,8 @@ package Spark;
 import DAO.User;
 import DAO.UserManagerImpl;
 import Token.TokenManager;
-import spark.Session;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,8 +32,11 @@ public class UserController {
             double rate = Double.parseDouble(request.queryParams("rate"));
 
             User user = new User(request.queryParams("name"), request.queryParams("surname"), request.queryParams("email"), request.queryParams("password"), bday, request.queryParams("role"), request.queryParams("city"), rate);
-            userManager.addUser(user);
-            return request.queryParams("name") + " e' stato inserito";
+
+            if (userManager.getUser(request.queryParams("email"))==null){
+                userManager.addUser(user);
+                return "OK";
+            }else {return "NO";}
         });
 
         get("/add", ((request, response) -> "Empty"));

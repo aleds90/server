@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -92,7 +93,7 @@ public class TokenManager {
         session.getTransaction().begin();
         SecureRandom secureRandom = new SecureRandom();
         String randomToken = new BigInteger(130, secureRandom).toString(32);
-        long future = new Date().getTime() + 3600000 * 24*30; // 1 Mese
+        long future = Calendar.getInstance().getTimeInMillis() - 3600000 * 24*30; // 1 Mese
         RefreshToken token = new RefreshToken(id_client, id_user, new Timestamp(future), randomToken);
         session.save(token);
 
