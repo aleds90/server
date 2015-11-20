@@ -1,10 +1,15 @@
 package Token;
+/**
+ * Client serve per individuare il client che sta facendo una chiamata. Nel nostro caso avremo solo un client quindi i dati
+ * statici per tutte le chiamate effettuate verso il server. L'unica cosa che cambiera sara' il grant_types che gestira'
+ * in particolar modo le chiamate di login che possono essere o di tipo refresh o di tipo password
+ */
 
 public class Client {
-    private int id;
-    private String random_id;
-    private String secret_id;
-    private String grant_types;
+    private int id;//primary key
+    private String random_id;// uno dei due id che ci serve per identificare un client
+    private String secret_id;// uno dei due id che ci serve per identificare un client
+    private String grant_types;// stringa che individua il tipo di chiamata che sta facendo un client
 
     public int getId() {
         return id;

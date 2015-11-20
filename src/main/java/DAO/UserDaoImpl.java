@@ -8,16 +8,21 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
+/**
+ * UserDaoImpl si occupa di creare le query definite nell'interfaccia UserDao
+ */
 public class UserDaoImpl implements UserDAO {
-
-    private SessionFactory sessionFactory;
+    // attributi necessari per creare le query tramite hibernate
+    private SessionFactory sessionFactory;//strettamente collegato alla classe HibernateUtil che gestisce le sessioni con il db
     private Session session;
-
+    // costruttore della classe
     public UserDaoImpl(){
         this.sessionFactory = HibernateUtil.getSessionFactory();
         this.session= sessionFactory.openSession();
     }
-
+    /**
+     * 1: query per inserire un nuovo user
+     */
     public void addUser(User user) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
@@ -27,6 +32,11 @@ public class UserDaoImpl implements UserDAO {
         session.getTransaction().commit();
         session.close();
     }
+
+    /**
+     * 2: query per selezionare tutti gli user presenti nel db
+     * @return
+     */
 
     public List<User> getAllUsers() {
         if(!session.isOpen()){
@@ -40,22 +50,30 @@ public class UserDaoImpl implements UserDAO {
 
     }
 
+    /**
+     * 3: query per cancellare uno user dal db utilizzando il suo id
+     * @param id_user
+     */
+
     public void deleteUser(Integer id_user) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-
         Query query = session.createQuery("from User where id_user=:id_user");
         query.setParameter("id_user", id_user);
         User user = (User)query.uniqueResult();
-
         session.delete(user);
-
         session.getTransaction().commit();
         session.close();
 
     }
+
+    /**
+     * //4: query per selezionare un singolo user data un email
+     * @param email
+     * @return
+     */
 
     public User getUser(String email) {
         if(!session.isOpen()){
@@ -75,37 +93,16 @@ public class UserDaoImpl implements UserDAO {
         } else{ return null;}
     }
 
-    public List<User> getUserByCity(String city){
-        if(!session.isOpen()){
-            session = sessionFactory.openSession();
-        }
-        session.getTransaction().begin();
+    /**
+     * //5: query per selezionare una lista di user dati uno o piu' parametri utilizzando Criteria per la creazione della query
+     * @param name
+     * @param surname
+     * @param city
+     * @param rate
+     * @param role
+     * @return
+     */
 
-        Query query=session.createQuery("from User where city=:city");
-        query.setParameter("city", city);
-        List<User> listUser = query.list();
-
-        session.getTransaction().commit();
-        session.close();
-
-        return listUser;
-    }
-
-    public List<User> getUserByRate(double rate){
-        if(!session.isOpen()){
-            session = sessionFactory.openSession();
-        }
-        session.getTransaction().begin();
-
-        Query query=session.createQuery("from User where rate<=:rate");
-        query.setParameter("rate", rate);
-        List<User> listUser = query.list();
-
-        session.getTransaction().commit();
-        session.close();
-
-        return listUser;
-    }
     public List<User> getUserByAttributes(String name, String surname, String city, double rate, String role){
         if(!session.isOpen()){
             session = sessionFactory.openSession();
@@ -124,6 +121,12 @@ public class UserDaoImpl implements UserDAO {
         return listUser;
     }
 
+    /**
+     * //6: query utilizzata per il login che restituisce un user se la coppia email-password e' corretta
+     * @param email
+     * @param password
+     * @return
+     */
     public User getUserIfExist(String email, String password){
         if(!session.isOpen()){
             session = sessionFactory.openSession();
@@ -141,18 +144,19 @@ public class UserDaoImpl implements UserDAO {
 
     }
 
+    /**
+     * 7: query che resituisce vero o false se la coppia email-password e' corretta
+     */
+
     public boolean authentication(String email, String password){
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-
-
         Query query=session.createQuery("from User where (email=:email and password=:password)");
         query.setParameter("email", email);
         query.setParameter("password", password);
         User user = (User)query.uniqueResult();
-
         session.getTransaction().commit();
         session.close();
         if (user==null){
@@ -160,15 +164,14 @@ public class UserDaoImpl implements UserDAO {
         }return true;
     }
 
-
-
-
+    //metodo che setta la rate ad un valore alto se non viene inserita un valore nella richiesta
     private double checkDouble(double rate) {
         if (rate==0){
             return Double.MAX_VALUE;
         }return rate;
     }
 
+    //metodo per prendere ogni tipo di nome se nella chiamata non vengono inseriti nomi
     private String check(String name) {
         if(name == null){
             return "%";

@@ -11,7 +11,9 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
-
+/**
+ * TokenManager e' la classe che si occupa di creare query inerenti alla tabella dei token.
+ */
 public class TokenManager {
     private SessionFactory sessionFactory;
     private Session session;
@@ -21,24 +23,27 @@ public class TokenManager {
         this.session = sessionFactory.openSession();
     }
 
-
+    /**
+     * fornisce l'id dello user prendendo in input il nome del token
+     * @param token
+     * @return
+     */
     public int getUserIdByToken(String token){
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-
         Query query = session.createQuery("SELECT id_user FROM RefreshToken WHERE token =:token");
         query.setParameter("token", token);
-
         int id = (int) query.uniqueResult();
-
         session.close();
-
         return id;
-
     }
 
+    /**
+     * Aggiorna la data di scadenza del token di accesso
+     * @param token
+     */
     public void refreshTime(AccessToken token) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
@@ -53,22 +58,29 @@ public class TokenManager {
         session.close();
     }
 
+    /**
+     * query che controlla lo stato di attivita' del token di accesso prendendo in input il nome
+     * @param token
+     * @return
+     */
     public boolean isATokenActive(String token) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-
         Query query = session.createQuery(" FROM AccessToken WHERE token =:token");
         query.setParameter("token", token);
-
         AccessToken accessToken = (AccessToken) query.uniqueResult();
         Date dateTime = accessToken.getExpair_app();
         session.close();
         return dateTime.after(new Date());
-
     }
 
+    /**
+     * query che controlla lo stato di attivita' del token di refresh prendendo in input il nome
+     * @param token
+     * @return
+     */
     public boolean isRTokenActive(String token) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
@@ -85,7 +97,12 @@ public class TokenManager {
 
     }
 
-
+    /**
+     * query che inserisce un nuovo token di refresh con annesse foreign key nel db
+     * @param id_user
+     * @param id_client
+     * @return
+     */
     public RefreshToken createRefreshToken(int id_user, int id_client) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
@@ -96,12 +113,17 @@ public class TokenManager {
         long future = Calendar.getInstance().getTimeInMillis() - 3600000 * 24*30; // 1 Mese
         RefreshToken token = new RefreshToken(id_client, id_user, new Timestamp(future), randomToken);
         session.save(token);
-
         session.getTransaction().commit();
         session.close();
         return token;
     }
 
+    /**
+     * query che inserisce un nuovo token di accesso con annesse foreign key nel db
+     * @param id_user
+     * @param id_client
+     * @return
+     */
     public AccessToken createAccessToken(int id_user, int id_client) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
@@ -112,11 +134,8 @@ public class TokenManager {
         long future = new Date().getTime() + 3600000 * 6; // 6 Ore
         AccessToken token = new AccessToken(id_client, id_user, new Timestamp(future), randomToken);
         session.save(token);
-
         session.getTransaction().commit();
         session.close();
         return token;
     }
-
-
 }

@@ -2,14 +2,18 @@ package Token;
 
 import java.sql.Timestamp;
 
+/**
+ * AccessToken viene utilizzato per dare accesso alle chiamate ad un determinato utente. In particolare in fare si login
+ * viene fornito un access token che sara' attivo per un determinato arco di tempo all'utente il quale sara' cosi' abilitato
+ * a poter effettuare chiamate al server. Nel caso l'access token sia scaduto l'utente dovra' quindi rieffettuare un login
+ * o tramite refresh token o tramite password ed nomeutente
+ */
 public class AccessToken implements Token {
-    private int token_id;
-    //chiave esterna client
-    private int id_client;
-    //chiave esterna user
-    private int id_user;
-    private Timestamp expair_app;
-    private String token;
+    private int token_id;// primary key del token
+    private int id_client;//foreign key con la tabella client
+    private int id_user;//foreign key con la tabella user
+    private Timestamp expair_app;// tempo di attivita' del token
+    private String token;// nome del token
 
     public AccessToken(int id_client, int id_user, Timestamp expair_app, String token) {
         this.id_client = id_client;
@@ -20,7 +24,6 @@ public class AccessToken implements Token {
 
     public AccessToken() {
     }
-
 
     public int getToken_id() {
         return token_id;

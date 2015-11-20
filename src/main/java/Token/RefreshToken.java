@@ -2,14 +2,21 @@ package Token;
 
 import java.sql.Timestamp;
 
+/**
+ * RefreshToken e' la classe che gestisce i token di refresh che vengono utilizzati per effettuare il login di refresh
+ * all'interno dell'applicazione. In particolare questi login vengono chiamati quando un utente riapre l'applicazione oppure
+ * quando questo cerca di effettuare delle ricerche con un access token scaduto. Il login di refresh andra a fornire due nuovi
+ * token attivi all'utente nel caso il token di refresh sia attivo. Nel caso questo sia scaduto l'utente verra indirizzato
+ * nella schermata di login con nome utente e password.
+ *
+ */
+
 public class RefreshToken implements Token {
-    private int token_id;
-    //chiave esterna client
-    private int id_client;
-    //chiave esterna user
-    private int id_user;
-    private Timestamp expair_app;
-    private String token;
+    private int token_id;// primary key del token
+    private int id_client;//chiave esterna client
+    private int id_user;//chiave esterna user
+    private Timestamp expair_app;// tempo di attivita' del token
+    private String token;// nome del token
 
     public RefreshToken(int id_client, int id_user, Timestamp expair_app, String token) {
         this.id_client = id_client;
