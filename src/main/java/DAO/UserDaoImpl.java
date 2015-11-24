@@ -167,11 +167,14 @@ public class UserDaoImpl implements UserDAO {
     /**
      * 8: query che permette di modificare uno user
      */
-    public int updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){
+    public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){
         if (!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
+        //Object object = session.load(User.class, id_user);
+        //User user = (User)object;
+        //System.out.println(user.getName());
         Query query = session.createQuery("update User set name=:name, surname=:surname, email =:email, role=:role, city=:city, rate=:rate where id_user=:id_user");
         query.setParameter("id_user", id_user);
         query.setParameter("name", name);
@@ -180,10 +183,10 @@ public class UserDaoImpl implements UserDAO {
         query.setParameter("role", role);
         query.setParameter("city", city);
         query.setParameter("rate", rate);
-        int result = query.executeUpdate();
+        query.executeUpdate();
         session.getTransaction().commit();
         session.close();
-        return result;
+
     }
 
 

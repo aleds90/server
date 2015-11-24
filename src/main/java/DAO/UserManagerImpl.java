@@ -38,6 +38,8 @@ public class UserManagerImpl implements UserManager {
         return userDAO.authentication(email, password);
     }
 
-    public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){};
+    public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){
+        userDAO.updateUser(id_user, name, surname, email, role, city, rate);
+    };
 
 }

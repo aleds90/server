@@ -30,5 +30,5 @@ public interface UserDAO {
     public boolean authentication(String email, String password);
 
     //8: query per modificare i field di uno user
-    public int updateUser(int id_user, String name, String surname, String email, String role, String city, double rate);
+    public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate);
 }

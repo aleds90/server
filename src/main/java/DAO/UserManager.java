@@ -7,6 +7,7 @@ import java.util.List;
  */
 public interface UserManager {
 
+
     public void addUser(User user);
     public List<User> getAllUsers();
     public void  deleteUser(Integer id_user);

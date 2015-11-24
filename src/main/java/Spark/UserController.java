@@ -1,4 +1,5 @@
 package Spark;
+import DAO.FollowDaoImpl;
 import DAO.User;
 import DAO.UserManagerImpl;
 import Token.TokenManager;
@@ -78,8 +79,14 @@ public class UserController {
 
         post("/update", ((request, response) -> {
             userManager.updateUser(Integer.parseInt(request.queryParams(("id_user"))), request.queryParams("name"), request.queryParams("surname"), request.queryParams("email"), request.queryParams("role"), request.queryParams("city"), Double.parseDouble(request.queryParams("rate")));
-            return "";
+            return "ok";
         }));
+
+        post("/getFollowers", ((request, response) -> {
+            List<User> userList = new FollowDaoImpl().getFollowersByUser(Integer.parseInt(request.queryParams("id_user")));
+            return  userList;
+        }),json());
+
 
 
 

@@ -1,0 +1,23 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="DAO.Follow" table="follow">
+        <id name="id_follow" column="id_follow" type="integer">
+            <generator class="increment" />
+
+        </id>
+
+
+        <many-to-one name="id_user" class="DAO.User" not-null="true">
+                <column name="id_user"/>
+        </many-to-one>
+        <many-to-one name="target_id_user" class="DAO.User" not-null="true">
+               <column name="target_id_user"/>
+        </many-to-one>
+
+        <property name="start_follow_date" column="start_follow_date" type="date" not-null="true"/>
+
+    </class>
+</hibernate-mapping>
