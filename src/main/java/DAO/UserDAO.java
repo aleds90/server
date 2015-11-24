@@ -28,4 +28,7 @@ public interface UserDAO {
 
     //7: query che resituisce vero o false se la coppia email-password e' corretta
     public boolean authentication(String email, String password);
+
+    //8: query per modificare i field di uno user
+    public int updateUser(int id_user, String name, String surname, String email, String role, String city, double rate);
 }

@@ -35,7 +35,9 @@ public class UserManagerImpl implements UserManager {
         return  userDAO.getUserIfExist(email, password);
     }
     public boolean authentication(String email, String password){
-        return userDAO.authentication(email,password);
+        return userDAO.authentication(email, password);
     }
+
+    public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){};
 
 }

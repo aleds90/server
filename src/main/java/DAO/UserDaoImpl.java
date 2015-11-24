@@ -164,6 +164,29 @@ public class UserDaoImpl implements UserDAO {
         }return true;
     }
 
+    /**
+     * 8: query che permette di modificare uno user
+     */
+    public int updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){
+        if (!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        Query query = session.createQuery("update User set name=:name, surname=:surname, email =:email, role=:role, city=:city, rate=:rate where id_user=:id_user");
+        query.setParameter("id_user", id_user);
+        query.setParameter("name", name);
+        query.setParameter("surname", surname);
+        query.setParameter("email", email);
+        query.setParameter("role", role);
+        query.setParameter("city", city);
+        query.setParameter("rate", rate);
+        int result = query.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
+        return result;
+    }
+
+
     //metodo che setta la rate ad un valore alto se non viene inserita un valore nella richiesta
     private double checkDouble(double rate) {
         if (rate==0){

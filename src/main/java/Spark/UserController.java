@@ -76,6 +76,11 @@ public class UserController {
             return list;
         }, json());
 
+        post("/update", ((request, response) -> {
+            userManager.updateUser(Integer.parseInt(request.queryParams(("id_user"))), request.queryParams("name"), request.queryParams("surname"), request.queryParams("email"), request.queryParams("role"), request.queryParams("city"), Double.parseDouble(request.queryParams("rate")));
+            return "";
+        }));
+
 
 
     }
