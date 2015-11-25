@@ -1,16 +1,12 @@
 package DAO;
 
 import Hibernate.HibernateUtil;
-import org.hibernate.*;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-/**
- * Created by jns on 24/11/15.
- */
+
 public class FollowDaoImpl implements FollowDAO {
 
 
@@ -23,21 +19,12 @@ public class FollowDaoImpl implements FollowDAO {
     }
 
     @Override
-    public List<User> getFollowersByUser(int id_user) {
+    public List<User> getFollowersByUser(int target_id_user) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-
-
-        DetachedCriteria usertable = DetachedCriteria.forClass(User.class).setProjection(Property.forName("usertable"));
-        DetachedCriteria followtable = DetachedCriteria.forClass(Follow.class).add(Restrictions.eq("target_id_user", id_user)).setProjection(Property.forName("followtable"));
-        List<User> userList = session.createCriteria(User.class)
-                .add(Restrictions.or(
-                        Property.forName("id_user").in(usertable),
-                        Property.forName("id_user").in(followtable)
-                )).list();
-
+        List<User> userList= session.createQuery("select id_user,name,surname,email,password,bday,role,city,rate from User where id_user in(select id_user from Follow where target_id_user="+target_id_user+")").list();
         session.getTransaction().commit();
         session.close();
         return userList;
@@ -45,7 +32,15 @@ public class FollowDaoImpl implements FollowDAO {
 
     @Override
     public List<User> getFollowedByUser(int id_user) {
-        return null;
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        List<User> userList= session.createQuery("select id_user,name,surname,email,password,bday,role,city,rate from User where id_user in(select target_id_user from Follow where id_user="+id_user+")").list();
+        session.getTransaction().commit();
+        session.close();
+        return userList;
+
     }
 
     @Override

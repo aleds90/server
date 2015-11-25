@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface FollowDAO {
 
-    public List<User> getFollowersByUser(int id_user);
+    public List<User> getFollowersByUser(int target_id_user);
     public List<User> getFollowedByUser(int id_user);
     public void createFollowing(int id_user, int target_id_user);
     public void removeFollowing(int id_user, int target_id_user);

@@ -76,20 +76,31 @@ public class UserController {
             List<User> list = userManager.getUserByAttributes(request.queryParams("name"), request.queryParams("surname"), request.queryParams("city"), check(request.queryParams("rate")), request.queryParams("role"));
             return list;
         }, json());
-
+        /**
+         * /update url che gestisce tutte le modifiche rispetto ad un utente. ricevendo come parametri tutti gli attributi tranne l'id
+         */
         post("/update", ((request, response) -> {
+            //TODO sistemare i parametri che riceve dato che non sono ancora completi.
             userManager.updateUser(Integer.parseInt(request.queryParams(("id_user"))), request.queryParams("name"), request.queryParams("surname"), request.queryParams("email"), request.queryParams("role"), request.queryParams("city"), Double.parseDouble(request.queryParams("rate")));
             return "ok";
         }));
 
+        /**
+         * /getFollowers url che dato un id_utente andra' ad individuare tutti gli users che seguono questo utente.
+         */
         post("/getFollowers", ((request, response) -> {
-            List<User> userList = new FollowDaoImpl().getFollowersByUser(Integer.parseInt(request.queryParams("id_user")));
+            List<User> userList = new FollowDaoImpl().getFollowersByUser(Integer.parseInt(request.queryParams("target_id_user")));
             return  userList;
         }),json());
 
 
-
-
+        /**
+         * /getFollowed url che dato un id_utente andra' ad individuare tutti gli users che l'utente segue
+         */
+        post("/getFollowed", ((request, response) -> {
+            List<User> userList = new FollowDaoImpl().getFollowedByUser(Integer.parseInt(request.queryParams("id_user")));
+            return  userList;
+        }),json());
     }
 
     //metodo utilizzato per gestire le chiamate con un parametro rate all'interno. in particolare se rate non viene compilato questo viene impostato come max value nelle ricerche

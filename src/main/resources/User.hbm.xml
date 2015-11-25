@@ -16,5 +16,7 @@
         <property name="role" column="role" type="string" not-null="true"/>
         <property name="city" column="city" type="string" not-null="true"/>
         <property name="rate" column="rate" type="double" not-null="true"/>
+
+
     </class>
 </hibernate-mapping>
