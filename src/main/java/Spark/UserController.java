@@ -1,4 +1,5 @@
 package Spark;
+import DAO.Follow;
 import DAO.FollowDaoImpl;
 import DAO.User;
 import DAO.UserManagerImpl;
@@ -24,7 +25,7 @@ public class UserController {
          */
         before("/api/*", (request, response) -> {
             if (!tokenManager.isATokenActive(request.headers("Authorization"))) {
-                halt(403,"403");// torniamo un errore se il token di accesso e' scaduto. Si richiede in questo caso di rieffettuare login con il refresh token per ottenere un nuovo token access
+                halt(403, "403");// torniamo un errore se il token di accesso e' scaduto. Si richiede in questo caso di rieffettuare login con il refresh token per ottenere un nuovo token access
             }
         });
 
@@ -42,12 +43,15 @@ public class UserController {
             Date bday = formatter.parse(request.queryParams("bday"));
             double rate = Double.parseDouble(request.queryParams("rate"));
             User user = new User(request.queryParams("name"), request.queryParams("surname"), request.queryParams("email"), request.queryParams("password"), bday, request.queryParams("role"), request.queryParams("city"), rate);
-            if (userManager.getUser(request.queryParams("email"))==null){
+            if (userManager.getUser(request.queryParams("email")) == null) {
                 userManager.addUser(user);
                 return "OK";
-            }else {return "NO";}
+            } else {
+                return "NO";
+            }
         });
         get("/add", ((request, response) -> "Empty"));
+
 
         /**
          * /getuser url per ricevere i dati di un utente tramite il parametro email
@@ -101,6 +105,42 @@ public class UserController {
             List<User> userList = new FollowDaoImpl().getFollowedByUser(Integer.parseInt(request.queryParams("id_user")));
             return  userList;
         }),json());
+
+        /**
+         * /addFollow url che viene chiama quando una persona inizia a seguirne un altra.
+         */
+        post("/addFollow", (request, response) -> {
+            Date date = new Date();
+            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")),userManager.getUser(request.queryParams("emailTarget")),date);
+            if (request.queryParams("emailUser")!=request.queryParams("emailTarget")){
+                new FollowDaoImpl().createFollowing(follow);
+                return "OK";
+            }else return "NO";
+        });
+
+        post("/addFollow", (request, response) -> {
+            Date date = new Date();
+            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")),userManager.getUser(request.queryParams("emailTarget")),date);
+            User user  = userManager.getUser(request.queryParams("emailUser"));
+            User target= userManager.getUser(request.queryParams("emailTarget"));
+            if (user.getEmail()==target.getEmail()) {
+                return "NO";
+            }else if (new FollowDaoImpl().getFollow(user,target).equals(null)){
+                new FollowDaoImpl().createFollowing(follow);
+                return "null";
+            }
+            else{
+
+                return "NO";
+            }
+            // TODO NON ENTRA NEGLI IF E ELSEIF
+        });
+
+        post("/deleteFollow", (request, response) -> {
+            Follow follow = new FollowDaoImpl().getFollow(userManager.getUser(request.queryParams("emailUser")),userManager.getUser(request.queryParams("emailTarget")));
+            new FollowDaoImpl().removeFollowing(follow);
+            return "OK";
+        });
     }
 
     //metodo utilizzato per gestire le chiamate con un parametro rate all'interno. in particolare se rate non viene compilato questo viene impostato come max value nelle ricerche

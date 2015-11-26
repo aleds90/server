@@ -1,6 +1,7 @@
 package DAO;
 
 import Hibernate.HibernateUtil;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -44,17 +45,52 @@ public class FollowDaoImpl implements FollowDAO {
     }
 
     @Override
-    public void createFollowing(int id_user, int target_id_user) {
-
+    public void createFollowing(Follow follow) {
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        session.save(follow);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
-    public void removeFollowing(int id_user, int target_id_user) {
-
+    public void removeFollowing(Follow follow) {
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        session.delete(follow);
+        session.getTransaction().commit();
+        session.close();
     }
+
+
 
     @Override
     public void removeAllFollowersByUser(int id_user) {
 
     }
+
+    @Override
+    public Follow getFollow(User user, User target) {
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        Query query = session.createQuery("from Follow where id_user=:id_user and target_id_user=:target_id_user");
+        query.setParameter("id_user", user);
+        query.setParameter("target_id_user", target);
+        Follow follow = (Follow)query.uniqueResult();
+
+        session.getTransaction().commit();
+        session.close();
+
+        if(null != follow){
+            return follow;
+        } else{ return null;}
+    }
+
+
 }
