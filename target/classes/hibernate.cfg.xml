@@ -7,7 +7,7 @@
 
         <property name="connection.url">jdbc:mysql://localhost:3306/mywebserver</property>
         <property name="connection.username">root</property>
-        <property name="connection.password">alessandro</property>
+        <property name="connection.password">1234</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
@@ -20,11 +20,14 @@
         <property name="connection.pool_size">1</property>
         <property name="current_session_context_class">thread</property>
 
-        <mapping resource="User.hbm.xml" />
         <mapping resource="Client.hbm.xml" />
         <mapping resource="RefreshToken.hbm.xml" />
         <mapping resource="AccessToken.hbm.xml" />
         <mapping resource="Follow.hbm.xml"/>
+        <mapping class="DAO.Message"/>
+        <mapping class="DAO.User"/>
+
+
 
 
         <!-- <mapping resource="com/mkyong/user/DBUser.hbm.xml"></mapping> -->

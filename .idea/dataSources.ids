@@ -10,6 +10,7 @@
     <schema name="" catalog="mysql"/>
     <schema name="" catalog="mywebserver"/>
     <schema name="" catalog="performance_schema"/>
+    <schema name="" catalog="test"/>
     <table name="CHARACTER_SETS" schema="" catalog="information_schema" type="SYSTEM VIEW">
       <column name="CHARACTER_SET_NAME" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
       <column name="DEFAULT_COLLATE_NAME" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
@@ -887,14 +888,27 @@
     </table>
     <table name="follow" schema="" catalog="mywebserver" type="TABLE">
       <column name="id_follow" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <column name="target_id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="start_follow_date" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
+      <column name="target_id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="id_follow"/>
       <foreign-key name="FKB45D3BB1F248F956" columns="id_user" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
       <foreign-key name="FKB45D3BB11C18F0A8" columns="target_id_user" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
       <index name="FKB45D3BB11C18F0A8" unique="false" columns="target_id_user"/>
       <index name="FKB45D3BB1F248F956" unique="false" columns="id_user"/>
+    </table>
+    <table name="message" schema="" catalog="mywebserver" type="TABLE">
+      <column name="id_message" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="isRead" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6" def="MA=="/>
+      <column name="sendetAt" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="text" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="id_receiver" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="id_sender" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id_message"/>
+      <foreign-key name="FK38EB00075F3B8EC0" columns="id_sender" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK38EB0007E373057A" columns="id_receiver" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK38EB00075F3B8EC0" unique="false" columns="id_sender"/>
+      <index name="FK38EB0007E373057A" unique="false" columns="id_receiver"/>
     </table>
     <table name="refresh_token" schema="" catalog="mywebserver" type="TABLE">
       <column name="token_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
@@ -905,19 +919,27 @@
       <primary-key name="PRIMARY" columns="token_id"/>
     </table>
     <table name="user" schema="" catalog="mywebserver" type="TABLE">
-      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="surname" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
       <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
-      <column name="password" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="bday" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
-      <column name="role" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="city" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="rate" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="surname" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id_user"/>
       <exported-key name="FKB45D3BB1F248F956" table="follow" schema="" catalog="mywebserver" columns="id_user"/>
       <exported-key name="FKB45D3BB11C18F0A8" table="follow" schema="" catalog="mywebserver" columns="target_id_user"/>
-      <index name="email" unique="true" columns="email"/>
+      <exported-key name="FK38EB00075F3B8EC0" table="message" schema="" catalog="mywebserver" columns="id_sender"/>
+      <exported-key name="FK38EB0007E373057A" table="message" schema="" catalog="mywebserver" columns="id_receiver"/>
+      <exported-key name="FKE7A23C17F248F956" table="userdetails" schema="" catalog="mywebserver" columns="id_user"/>
+    </table>
+    <table name="userdetails" schema="" catalog="mywebserver" type="TABLE">
+      <column name="bday" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="city" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="rate" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <column name="role" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id_user"/>
+      <foreign-key name="FKE7A23C17F248F956" columns="id_user" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FKE7A23C17F248F956" unique="false" columns="id_user"/>
     </table>
     <table name="cond_instances" schema="" catalog="performance_schema" type="SYSTEM TABLE">
       <column name="NAME" sqlType="VARCHAR" precision="128" scale="0" nullable="false" jdbcType="12"/>
@@ -1057,6 +1079,15 @@
       <column name="THREAD_ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="PROCESSLIST_ID" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="NAME" sqlType="VARCHAR" precision="128" scale="0" nullable="false" jdbcType="12"/>
+    </table>
+    <table name="Studenti" schema="" catalog="test" type="TABLE">
+      <column name="idStudenti" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="Nome" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="Cognome" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="DataIscrizione" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
+      <column name="Strumento" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="Classe" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="idStudenti"/>
     </table>
   </data-source>
 </component>
