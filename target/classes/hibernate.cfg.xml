@@ -25,6 +25,7 @@
         <mapping resource="RefreshToken.hbm.xml" />
         <mapping resource="AccessToken.hbm.xml" />
         <mapping resource="Follow.hbm.xml"/>
+        <mapping class="DAO.Message"/>
 
 
         <!-- <mapping resource="com/mkyong/user/DBUser.hbm.xml"></mapping> -->

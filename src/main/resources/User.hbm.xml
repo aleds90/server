@@ -3,11 +3,12 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="DAO.User" table="user">
+    <class name="DAO.User" table="user" >
         <id name="id_user" column="id_user" type="integer">
             <generator class="increment" />
 
         </id>
+
         <property name="name" column="name" type="string" not-null="true"/>
         <property name="surname" column="surname" type="string" not-null="true"/>
         <property name="email" column="email" type="string" unique-key="key"/>
@@ -19,4 +20,5 @@
 
 
     </class>
+
 </hibernate-mapping>
