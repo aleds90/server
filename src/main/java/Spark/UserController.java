@@ -1,8 +1,6 @@
 package Spark;
-import DAO.Follow;
-import DAO.FollowDaoImpl;
-import DAO.User;
-import DAO.UserManagerImpl;
+
+import DAO.*;
 import Token.TokenManager;
 
 import java.text.SimpleDateFormat;
@@ -94,8 +92,8 @@ public class UserController {
          */
         post("/getFollowers", ((request, response) -> {
             List<User> userList = new FollowDaoImpl().getFollowersByUser(Integer.parseInt(request.queryParams("target_id_user")));
-            return  userList;
-        }),json());
+            return userList;
+        }), json());
 
 
         /**
@@ -103,33 +101,32 @@ public class UserController {
          */
         post("/getFollowed", ((request, response) -> {
             List<User> userList = new FollowDaoImpl().getFollowedByUser(Integer.parseInt(request.queryParams("id_user")));
-            return  userList;
-        }),json());
+            return userList;
+        }), json());
 
         /**
          * /addFollow url che viene chiama quando una persona inizia a seguirne un altra.
          */
         post("/addFollow", (request, response) -> {
             Date date = new Date();
-            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")),userManager.getUser(request.queryParams("emailTarget")),date);
-            if (request.queryParams("emailUser")!=request.queryParams("emailTarget")){
+            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")), userManager.getUser(request.queryParams("emailTarget")), date);
+            if (request.queryParams("emailUser") != request.queryParams("emailTarget")) {
                 new FollowDaoImpl().createFollowing(follow);
                 return "OK";
-            }else return "NO";
+            } else return "NO";
         });
 
         post("/addFollow", (request, response) -> {
             Date date = new Date();
-            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")),userManager.getUser(request.queryParams("emailTarget")),date);
-            User user  = userManager.getUser(request.queryParams("emailUser"));
-            User target= userManager.getUser(request.queryParams("emailTarget"));
-            if (user.getEmail()==target.getEmail()) {
+            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")), userManager.getUser(request.queryParams("emailTarget")), date);
+            User user = userManager.getUser(request.queryParams("emailUser"));
+            User target = userManager.getUser(request.queryParams("emailTarget"));
+            if (user.getEmail() == target.getEmail()) {
                 return "NO";
-            }else if (new FollowDaoImpl().getFollow(user,target).equals(null)){
+            } else if (new FollowDaoImpl().getFollow(user, target).equals(null)) {
                 new FollowDaoImpl().createFollowing(follow);
                 return "null";
-            }
-            else{
+            } else {
 
                 return "NO";
             }
@@ -137,10 +134,113 @@ public class UserController {
         });
 
         post("/deleteFollow", (request, response) -> {
-            Follow follow = new FollowDaoImpl().getFollow(userManager.getUser(request.queryParams("emailUser")),userManager.getUser(request.queryParams("emailTarget")));
+            Follow follow = new FollowDaoImpl().getFollow(userManager.getUser(request.queryParams("emailUser")), userManager.getUser(request.queryParams("emailTarget")));
             new FollowDaoImpl().removeFollowing(follow);
             return "OK";
         });
+
+        post("/addMessage", ((request, response) -> {
+            Message message = new Message();
+
+            User user_sender = userManager.getUser(request.queryParams("email_sender"));
+            User user_receiver = userManager.getUser(request.queryParams("email_receiver"));
+
+            message.setId_sender(user_sender);
+            message.setId_receiver(user_receiver);
+            message.setText(request.queryParams("text"));
+            message.setRead(false);
+            message.setSendetAt(new Date());
+
+            new MessageDAOImpl().sendMessage(message);
+
+            return message.getText();
+        }));
+
+        post("/setRead", (request, response) -> {
+            Message message = new Message();
+
+            int id_message = Integer.parseInt(request.queryParams("id_message"));
+
+            message.setId_message(id_message);
+
+            new MessageDAOImpl().setRead(message);
+
+            return "Done";
+        });
+
+        post("/getMessages", (request, response) -> {
+            List<Message> messageList;
+
+            User user = userManager.getUser(request.queryParams("user_mail"));
+
+            messageList= new MessageDAOImpl().getMessageByUser(user);
+
+            //TODO Ordinare la lista per dei criteri da accordare
+            // ( Prima Data Messaggio -> Utente -> Data Messaggi ???)
+            // il return é un po strano ma corretto(esempio user_mail= Amail):
+            /*[
+            {
+                "id_message": 1,
+                    "text": "qwer    ",
+                    "sendetAt": "Nov 30, 2015 7:19:45 PM",
+                    "read": true,
+                    "id_sender": {
+                "id_user": 2,
+                        "name": "Aname",
+                        "surname": "Asurname",
+                        "email": "Amail",
+                        "password": "Apass",
+                        "bday": "gen 1, 2000",
+                        "role": "Arole",
+                        "city": "Acity",
+                        "rate": 10.1
+            },
+                "id_receiver": {
+                "id_user": 1,
+                        "name": "Bname",
+                        "surname": "Bsurname",
+                        "email": "Bmail",
+                        "password": "Bpass",
+                        "bday": "gen 1, 2000",
+                        "role": "Brole",
+                        "city": "Bcity",
+                        "rate": 10.1
+            }
+            },
+            {
+                "id_message": 2,
+                    "text": "ciao, come va?",
+                    "sendetAt": "Nov 30, 2015 7:37:19 PM",
+                    "read": false,
+                    "id_sender": {
+                "id_user": 2,
+                        "name": "Aname",
+                        "surname": "Asurname",
+                        "email": "Amail",
+                        "password": "Apass",
+                        "bday": "gen 1, 2000",
+                        "role": "Arole",
+                        "city": "Acity",
+                        "rate": 10.1
+            },
+                "id_receiver": {
+                "id_user": 1,
+                        "name": "Bname",
+                        "surname": "Bsurname",
+                        "email": "Bmail",
+                        "password": "Bpass",
+                        "bday": "gen 1, 2000",
+                        "role": "Brole",
+                        "city": "Bcity",
+                        "rate": 10.1
+            }
+            }
+            ]*/
+
+            return messageList;
+        },json());
+
+
     }
 
     //metodo utilizzato per gestire le chiamate con un parametro rate all'interno. in particolare se rate non viene compilato questo viene impostato come max value nelle ricerche
