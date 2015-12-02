@@ -4,6 +4,7 @@ import DAO.Response;
 import DAO.User;
 import DAO.UserManagerImpl;
 import Token.*;
+
 import static Json.JsonUtil.json;
 import static spark.Spark.post;
 
@@ -31,8 +32,8 @@ public class LoginController {
                 //ciclo che gestisce la risposta nel caso i dati di accesso sono giusti. In particolare forniamo al client:
                 //i dati dello user che fa accesso, un refresh token e un access token nuovi
                 if (user != null && client != null) {
-                    AccessToken accessToken = tokenManager.createAccessToken(user.getId_user(), client.getId());
-                    RefreshToken refreshToken = tokenManager.createRefreshToken(user.getId_user(), client.getId());
+                    AccessToken accessToken = tokenManager.createAccessToken(user, client);
+                    RefreshToken refreshToken = tokenManager.createRefreshToken(user, client);
                     responseServer.setUser(user);
                     responseServer.setType("2"); // Il tipo di risposta serve a far capire al client che tipo di dati deve aspettarsi come risposta
                     responseServer.setAccess_Token(accessToken.getToken());
@@ -49,8 +50,8 @@ public class LoginController {
                     responseServer.setType("401");
                 }//se il token e' attivo forniamo come risposta due nuovi token di accesso e refresh
                 else {
-                    AccessToken accessToken = tokenManager.createAccessToken(tokenManager.getUserIdByToken(token), client.getId());
-                    RefreshToken refreshToken = tokenManager.createRefreshToken(tokenManager.getUserIdByToken(token), client.getId());
+                    AccessToken accessToken = tokenManager.createAccessToken(tokenManager.getUserIdByToken(token), client);
+                    RefreshToken refreshToken = tokenManager.createRefreshToken(tokenManager.getUserIdByToken(token), client);
                     responseServer.setType("4"); // Access e Refresh Token
                     responseServer.setAccess_Token(accessToken.getToken());
                     responseServer.setRefresh_Token(refreshToken.getToken());

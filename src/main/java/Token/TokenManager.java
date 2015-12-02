@@ -1,5 +1,6 @@
 package Token;
 
+import DAO.User;
 import Hibernate.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -28,16 +29,16 @@ public class TokenManager {
      * @param token
      * @return
      */
-    public int getUserIdByToken(String token){
+    public User getUserIdByToken(String token) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        Query query = session.createQuery("SELECT id_user FROM RefreshToken WHERE token =:token");
+        Query query = session.createQuery("select id_user FROM RefreshToken WHERE token =:token");
         query.setParameter("token", token);
-        int id = (int) query.uniqueResult();
+        User user = (User) query.uniqueResult();
         session.close();
-        return id;
+        return user;
     }
 
     /**
@@ -103,7 +104,7 @@ public class TokenManager {
      * @param id_client
      * @return
      */
-    public RefreshToken createRefreshToken(int id_user, int id_client) {
+    public RefreshToken createRefreshToken(User id_user, Client id_client) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
         }
@@ -124,7 +125,7 @@ public class TokenManager {
      * @param id_client
      * @return
      */
-    public AccessToken createAccessToken(int id_user, int id_client) {
+    public AccessToken createAccessToken(User id_user, Client id_client) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
         }

@@ -1,10 +1,15 @@
 package DAO;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Created by jns on 24/11/15.
  */
+@Entity
+@Table(name = "follow")
 public class Follow {
 
     private int id_follow;
@@ -21,6 +26,7 @@ public class Follow {
     public Follow() {
     }
 
+    @Type(type = "date")
     public Date getStart_follow_date() {
         return start_follow_date;
     }
@@ -29,6 +35,8 @@ public class Follow {
         this.start_follow_date = start_follow_date;
     }
 
+    @Id
+    @GeneratedValue
     public int getId_follow() {
         return id_follow;
     }
@@ -37,6 +45,8 @@ public class Follow {
         this.id_follow = id_follow;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "id_user")
     public User getId_user() {
         return id_user;
     }
@@ -45,6 +55,8 @@ public class Follow {
         this.id_user = id_user;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "target_id_user")
     public User getTarget_id_user() {
         return target_id_user;
     }

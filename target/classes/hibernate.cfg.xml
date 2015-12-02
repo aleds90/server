@@ -20,10 +20,10 @@
         <property name="connection.pool_size">1</property>
         <property name="current_session_context_class">thread</property>
 
-        <mapping resource="Client.hbm.xml" />
-        <mapping resource="RefreshToken.hbm.xml" />
-        <mapping resource="AccessToken.hbm.xml" />
-        <mapping resource="Follow.hbm.xml"/>
+        <mapping class="Token.Client" />
+        <mapping class="Token.RefreshToken" />
+        <mapping class="Token.AccessToken" />
+        <mapping class="DAO.Follow"/>
         <mapping class="DAO.Message"/>
         <mapping class="DAO.User"/>
 

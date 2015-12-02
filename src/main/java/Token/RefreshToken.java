@@ -1,5 +1,8 @@
 package Token;
 
+import DAO.User;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
@@ -10,15 +13,16 @@ import java.sql.Timestamp;
  * nella schermata di login con nome utente e password.
  *
  */
-
+@Entity
+@Table(name = "refresh_token")
 public class RefreshToken implements Token {
     private int token_id;// primary key del token
-    private int id_client;//chiave esterna client
-    private int id_user;//chiave esterna user
+    private Client id_client;//chiave esterna client
+    private User id_user;//chiave esterna user
     private Timestamp expair_app;// tempo di attivita' del token
     private String token;// nome del token
 
-    public RefreshToken(int id_client, int id_user, Timestamp expair_app, String token) {
+    public RefreshToken(Client id_client, User id_user, Timestamp expair_app, String token) {
         this.id_client = id_client;
         this.id_user = id_user;
         this.expair_app = expair_app;
@@ -28,6 +32,8 @@ public class RefreshToken implements Token {
     public RefreshToken() {
     }
 
+    @Id
+    @GeneratedValue
     public int getToken_id() {
         return token_id;
     }
@@ -36,19 +42,23 @@ public class RefreshToken implements Token {
         this.token_id = token_id;
     }
 
-    public int getId_client() {
+    @ManyToOne
+    @JoinColumn(name = "id_client")
+    public Client getId_client() {
         return id_client;
     }
 
-    public void setId_client(int id_client) {
+    public void setId_client(Client id_client) {
         this.id_client = id_client;
     }
 
-    public int getId_user() {
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    public User getId_user() {
         return id_user;
     }
 
-    public void setId_user(int id_user) {
+    public void setId_user(User id_user) {
         this.id_user = id_user;
     }
 

@@ -872,25 +872,31 @@
       <primary-key name="PRIMARY" columns="Host,User"/>
     </table>
     <table name="access_token" schema="" catalog="mywebserver" type="TABLE">
-      <column name="token_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="id_client" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="expair_app" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
-      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="token_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="expair_app" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="id_client" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="token_id"/>
+      <foreign-key name="FK8C6E375EF248F956" columns="id_user" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK8C6E375E47A50F" columns="id_client" ref-table="client" ref-schema="" ref-catalog="mywebserver" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK8C6E375E47A50F" unique="false" columns="id_client"/>
+      <index name="FK8C6E375EF248F956" unique="false" columns="id_user"/>
     </table>
     <table name="client" schema="" catalog="mywebserver" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="random_id" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="secret_id" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="grant_types" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="grant_types" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="random_id" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="secret_id" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK8C6E375E47A50F" table="access_token" schema="" catalog="mywebserver" columns="id_client"/>
+      <exported-key name="FKAAA4DF9547A50F" table="refresh_token" schema="" catalog="mywebserver" columns="id_client"/>
     </table>
     <table name="follow" schema="" catalog="mywebserver" type="TABLE">
-      <column name="id_follow" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="start_follow_date" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
-      <column name="target_id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="id_follow" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="start_follow_date" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
       <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="target_id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="id_follow"/>
       <foreign-key name="FKB45D3BB1F248F956" columns="id_user" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
       <foreign-key name="FKB45D3BB11C18F0A8" columns="target_id_user" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
@@ -911,12 +917,16 @@
       <index name="FK38EB0007E373057A" unique="false" columns="id_receiver"/>
     </table>
     <table name="refresh_token" schema="" catalog="mywebserver" type="TABLE">
-      <column name="token_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="expair_app" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
-      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
-      <column name="id_client" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="token_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="expair_app" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="id_client" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="token_id"/>
+      <foreign-key name="FKAAA4DF95F248F956" columns="id_user" ref-table="user" ref-schema="" ref-catalog="mywebserver" ref-columns="id_user" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FKAAA4DF9547A50F" columns="id_client" ref-table="client" ref-schema="" ref-catalog="mywebserver" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FKAAA4DF9547A50F" unique="false" columns="id_client"/>
+      <index name="FKAAA4DF95F248F956" unique="false" columns="id_user"/>
     </table>
     <table name="user" schema="" catalog="mywebserver" type="TABLE">
       <column name="id_user" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -925,10 +935,12 @@
       <column name="password" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <column name="surname" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id_user"/>
+      <exported-key name="FK8C6E375EF248F956" table="access_token" schema="" catalog="mywebserver" columns="id_user"/>
       <exported-key name="FKB45D3BB1F248F956" table="follow" schema="" catalog="mywebserver" columns="id_user"/>
       <exported-key name="FKB45D3BB11C18F0A8" table="follow" schema="" catalog="mywebserver" columns="target_id_user"/>
       <exported-key name="FK38EB00075F3B8EC0" table="message" schema="" catalog="mywebserver" columns="id_sender"/>
       <exported-key name="FK38EB0007E373057A" table="message" schema="" catalog="mywebserver" columns="id_receiver"/>
+      <exported-key name="FKAAA4DF95F248F956" table="refresh_token" schema="" catalog="mywebserver" columns="id_user"/>
       <exported-key name="FKE7A23C17F248F956" table="userdetails" schema="" catalog="mywebserver" columns="id_user"/>
     </table>
     <table name="userdetails" schema="" catalog="mywebserver" type="TABLE">

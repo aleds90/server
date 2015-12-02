@@ -1,16 +1,25 @@
 package Token;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Client serve per individuare il client che sta facendo una chiamata. Nel nostro caso avremo solo un client quindi i dati
  * statici per tutte le chiamate effettuate verso il server. L'unica cosa che cambiera sara' il grant_types che gestira'
  * in particolar modo le chiamate di login che possono essere o di tipo refresh o di tipo password
  */
-
+@Entity
+@Table(name = "client")
 public class Client {
     private int id;//primary key
     private String random_id;// uno dei due id che ci serve per identificare un client
     private String secret_id;// uno dei due id che ci serve per identificare un client
     private String grant_types;// stringa che individua il tipo di chiamata che sta facendo un client
 
+    @Id
+    @GeneratedValue
     public int getId() {
         return id;
     }
