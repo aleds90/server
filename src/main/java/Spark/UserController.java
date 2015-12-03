@@ -30,9 +30,11 @@ public class UserController {
         /**
          * /users :url per ricevere la lista completa degli user presenti in db
          */
-        post("/users", (request, response) ->{
-                return userManager.getAllUsers();
-            }, json());
+
+        post("/users", (request, response) -> {
+            return userManager.getAllUsers();
+        }, json());
+
         after((req, res) -> res.type("application/json"));
 
         /**
