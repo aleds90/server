@@ -1,25 +1,22 @@
 package DAO;
 
-<<<<<<< HEAD
+
 import javax.persistence.*;
 
 
-=======
+
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by jns on 30/11/15.
- */
->>>>>>> 2ebd1533d33db924b50e8d76054c16e83107e0eb
+
 @Entity
 @Table(name = "message")
 public class Message {
 
     private int id_message;
-<<<<<<< HEAD
+
     private User send;
     private User recieve;
     public Message(int id_message, User send, User recieve){
@@ -30,7 +27,7 @@ public class Message {
     @Id
     @GeneratedValue
 
-=======
+
     private String text;
     private Date sendetAt;
     private boolean read;
@@ -42,7 +39,7 @@ public class Message {
 
     @Id
     @GeneratedValue
->>>>>>> 2ebd1533d33db924b50e8d76054c16e83107e0eb
+
     public int getId_message() {
         return id_message;
     }
@@ -50,7 +47,7 @@ public class Message {
     public void setId_message(int id_message) {
         this.id_message = id_message;
     }
-<<<<<<< HEAD
+
     @ManyToOne
     @JoinColumn(name = "RECIEVE")
     public User getRecieve() {
@@ -69,7 +66,7 @@ public class Message {
     public void setSend(User send) {
         this.send = send;
     }
-=======
+
 
 
     public String getText() {
@@ -117,5 +114,5 @@ public class Message {
         this.id_receiver = id_receiver;
     }
 
->>>>>>> 2ebd1533d33db924b50e8d76054c16e83107e0eb
+
 }
