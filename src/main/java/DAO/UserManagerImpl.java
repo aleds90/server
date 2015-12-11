@@ -2,7 +2,8 @@ package DAO;
 
 import java.util.List;
 /**
- * UserManagerImpl e' la classe che dovra essere chiama per invocare una query all'interno delle nostre classi che ricevono dati.
+ * UserManagerImpl e' la classe che dovra essere chiama per invocare una query all'interno delle nostre classi che
+ * ricevono dati.
  */
 public class UserManagerImpl implements UserManager {
 
@@ -16,8 +17,8 @@ public class UserManagerImpl implements UserManager {
         userDAO.addUser(user);
     }
 
-    public List<User> getAllUsers() {
-        return userDAO.getAllUsers();
+    public List<User> getAllUsers(String email) {
+        return userDAO.getAllUsers(email);
     }
 
     public void deleteUser(Integer id_user) {
@@ -29,7 +30,9 @@ public class UserManagerImpl implements UserManager {
     }
 
     public List<User> getUserByAttributes(
-            String nome, String surname, String city, double rate, String role){return userDAO.getUserByAttributes(nome, surname, city, rate, role);
+            String nome, String city, double rate, String role) {
+        return userDAO.getUserByAttributes(nome,
+                city, rate, role);
     }
     public User getUserIfExist(String email, String password){
         return  userDAO.getUserIfExist(email, password);
@@ -41,5 +44,9 @@ public class UserManagerImpl implements UserManager {
     public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){
         userDAO.updateUser(id_user, name, surname, email, role, city, rate);
     };
+
+    public List<User> getAllUsersWithMessage(int id_user) {
+        return userDAO.getAllUsersWithMessage(id_user);
+    }
 
 }

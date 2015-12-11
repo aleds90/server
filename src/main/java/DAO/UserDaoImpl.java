@@ -38,12 +38,13 @@ public class UserDaoImpl implements UserDAO {
      * @return
      */
 
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(String email) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        List<User> userList =  session.createQuery("from User").list();
+        List<User> userList = session.createQuery("from User WHERE email!=:email and role is not null")
+                .setParameter("email", email).list();
         session.getTransaction().commit();
         session.close();
         return userList;
@@ -96,14 +97,13 @@ public class UserDaoImpl implements UserDAO {
     /**
      * //5: query per selezionare una lista di user dati uno o piu' parametri utilizzando Criteria per la creazione della query
      * @param name
-     * @param surname
      * @param city
      * @param rate
      * @param role
      * @return
      */
 
-    public List<User> getUserByAttributes(String name, String surname, String city, double rate, String role){
+    public List<User> getUserByAttributes(String name, String city, double rate, String role) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
@@ -111,7 +111,6 @@ public class UserDaoImpl implements UserDAO {
 
         List<User> listUser = session.createCriteria(User.class)
                 .add(Restrictions.like("name", check(name)))
-                .add(Restrictions.like("surname", check(surname)))
                 .add(Restrictions.like("city", check(city)))
                 .add(Restrictions.lt("rate", checkDouble(rate)))
                 .add(Restrictions.like("role", check(role))).list();
@@ -172,21 +171,35 @@ public class UserDaoImpl implements UserDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        //Object object = session.load(User.class, id_user);
-        //User user = (User)object;
-        //System.out.println(user.getName());
-        Query query = session.createQuery("update User set name=:name, surname=:surname, email =:email, role=:role, city=:city, rate=:rate where id_user=:id_user");
-        query.setParameter("id_user", id_user);
-        query.setParameter("name", name);
-        query.setParameter("surname", surname);
-        query.setParameter("email", email);
-        query.setParameter("role", role);
-        query.setParameter("city", city);
-        query.setParameter("rate", rate);
-        query.executeUpdate();
+
+        Object object = session.load(User.class, id_user);
+        User user = (User) object;
+        user.setName(name);
+        user.setSurname(surname);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setCity(city);
+        user.setRate(rate);
+
         session.getTransaction().commit();
         session.close();
 
+    }
+
+
+    @Override
+    public List<User> getAllUsersWithMessage(int id_user) {
+        if (!session.isOpen()) {
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        List<User> userList = session.createQuery(" FROM User WHERE id_user in (" +
+                "SELECT id_sender FROM Message WHERE id_receiver=" + id_user + ")" +
+                " or " +
+                "id_user in(SELECT id_receiver FROM Message WHERE id_sender=" + id_user + ")").list();
+        session.getTransaction().commit();
+        session.close();
+        return userList;
     }
 
 
