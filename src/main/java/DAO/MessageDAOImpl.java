@@ -4,13 +4,8 @@ import Hibernate.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jns on 30/11/15.
- */
 public class MessageDAOImpl implements MessageDAO {
 
     // attributi necessari per creare le query tramite hibernate
@@ -56,9 +51,26 @@ public class MessageDAOImpl implements MessageDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        List<Message> messageList = session.createQuery( "FROM Message WHERE (id_sender="+user.getId_user() +" or id_receiver="+user.getId_user()+")").list();
+        List<Message> messageList = session.createQuery( "FROM Message WHERE (id_sender="+user.getId_user() +"" +
+                " or id_receiver="+user.getId_user()+")").list();
         session.getTransaction().commit();
         session.close();
         return messageList;
     }
+
+    @Override
+    public List<User> getAllUsersWithMessage(int id_user) {
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        List<User> userList = session.createQuery(" FROM User WHERE id_user in (" +
+                "SELECT id_sender FROM Message WHERE id_receiver="+id_user+")" +
+                " or " +
+                "id_user in(SELECT id_receiver FROM Message WHERE id_sender="+id_user+")").list();
+        session.getTransaction().commit();
+        session.close();
+        return userList;
+    }
+
 }

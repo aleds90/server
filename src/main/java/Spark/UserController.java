@@ -2,6 +2,7 @@ package Spark;
 
 import DAO.*;
 import Token.TokenManager;
+import spark.ResponseTransformer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -79,8 +80,8 @@ public class UserController {
          * /getFiltered url che gestisce tutte le ricerche che si possono effetuare tramite i parametri di: name surname city rate role
          */
         post("/getFiltered", (request, response) -> {
-            List<User> list = userManager.getUserByAttributes(request.queryParams("name"), request.queryParams("surname"), request.queryParams("city"), check(request.queryParams("rate")), request.queryParams("role"));
-            return list;
+            return userManager.getUserByAttributes(request.queryParams("name"), request.queryParams("surname"), request.queryParams("city"), check(request.queryParams("rate")), request.queryParams("role"));
+
         }, json());
         /**
          * /update url che gestisce tutte le modifiche rispetto ad un utente. ricevendo come parametri tutti gli attributi tranne l'id
@@ -98,6 +99,11 @@ public class UserController {
             List<User> userList = new FollowDaoImpl().getFollowersByUser(Integer.parseInt(request.queryParams("target_id_user")));
             return userList;
         }), json());
+
+        post("/getUsersConversation", ((request1, response1) -> {
+            List<User> list = new MessageDAOImpl().getAllUsersWithMessage(Integer.parseInt(request1.queryParams("id_user")));
+            return list;
+        }),json());
 
 
         /**
@@ -180,72 +186,13 @@ public class UserController {
             messageList= new MessageDAOImpl().getMessageByUser(user);
 
             //TODO Ordinare la lista per dei criteri da accordare
-            // ( Prima Data Messaggio -> Utente -> Data Messaggi ???)
-            // il return é un po strano ma corretto(esempio user_mail= Amail):
-            /*[
-            {
-                "id_message": 1,
-                    "text": "qwer    ",
-                    "sendetAt": "Nov 30, 2015 7:19:45 PM",
-                    "read": true,
-                    "id_sender": {
-                "id_user": 2,
-                        "name": "Aname",
-                        "surname": "Asurname",
-                        "email": "Amail",
-                        "password": "Apass",
-                        "bday": "gen 1, 2000",
-                        "role": "Arole",
-                        "city": "Acity",
-                        "rate": 10.1
-            },
-                "id_receiver": {
-                "id_user": 1,
-                        "name": "Bname",
-                        "surname": "Bsurname",
-                        "email": "Bmail",
-                        "password": "Bpass",
-                        "bday": "gen 1, 2000",
-                        "role": "Brole",
-                        "city": "Bcity",
-                        "rate": 10.1
-            }
-            },
-            {
-                "id_message": 2,
-                    "text": "ciao, come va?",
-                    "sendetAt": "Nov 30, 2015 7:37:19 PM",
-                    "read": false,
-                    "id_sender": {
-                "id_user": 2,
-                        "name": "Aname",
-                        "surname": "Asurname",
-                        "email": "Amail",
-                        "password": "Apass",
-                        "bday": "gen 1, 2000",
-                        "role": "Arole",
-                        "city": "Acity",
-                        "rate": 10.1
-            },
-                "id_receiver": {
-                "id_user": 1,
-                        "name": "Bname",
-                        "surname": "Bsurname",
-                        "email": "Bmail",
-                        "password": "Bpass",
-                        "bday": "gen 1, 2000",
-                        "role": "Brole",
-                        "city": "Bcity",
-                        "rate": 10.1
-            }
-            }
-            ]*/
 
             return messageList;
         },json());
 
-
     }
+
+
 
     //metodo utilizzato per gestire le chiamate con un parametro rate all'interno. in particolare se rate non viene compilato questo viene impostato come max value nelle ricerche
     private double check(String rate) {

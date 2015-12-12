@@ -25,7 +25,7 @@ public class FollowDaoImpl implements FollowDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        List<User> userList= session.createQuery("select id_user,name,surname,email,password,bday,role,city,rate from User where id_user in(select id_user from Follow where target_id_user="+target_id_user+")").list();
+        List<User> userList= session.createQuery("from User where id_user in(select id_user from Follow where target_id_user="+target_id_user+")").list();
         session.getTransaction().commit();
         session.close();
         return userList;
@@ -37,7 +37,8 @@ public class FollowDaoImpl implements FollowDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        List<User> userList= session.createQuery("select id_user,name,surname,email,password,bday,role,city,rate from User where id_user in(select target_id_user from Follow where id_user="+id_user+")").list();
+        List<User> userList= session.createQuery(" from " +
+                "User where id_user in(select target_id_user from Follow where id_user="+id_user+")").list();
         session.getTransaction().commit();
         session.close();
         return userList;

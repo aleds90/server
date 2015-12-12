@@ -43,17 +43,23 @@ public class TokenManager {
 
     /**
      * Aggiorna la data di scadenza del token di accesso
-     * @param token
+     * @param
      */
-    public void refreshTime(AccessToken token) {
+    public void refreshTime(User id_user) {
         if (!session.isOpen()) {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
+
         long timeToAdd = 3600000 * 6; // 1 Ora per 6 = 6 Ore
         long future = new Date().getTime() + timeToAdd;
-        token.setExpair_app(new Timestamp(future));
-        session.save(token);
+
+        Query query = session.createQuery("update AccessToken set expair_app=:newtime where id_user=:id_user");
+
+        query.setParameter("newtime", new Date(future));
+        query.setParameter("id_user", id_user);
+
+        query.executeUpdate();
 
         session.getTransaction().commit();
         session.close();

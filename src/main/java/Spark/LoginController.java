@@ -16,7 +16,19 @@ import static spark.Spark.post;
 
 public class LoginController {
 
+
     public LoginController(final UserManagerImpl userManager, final ClientDAOImpl clientDAO, final TokenManager tokenManager) {
+
+
+        post("/refreshAT", (request1, response1) -> {
+
+            User user = userManager.getUser(request1.queryParams("email"));
+
+            tokenManager.refreshTime(user);
+            return "";
+        });
+
+
         //indica l' indirizzo al quale deve essere fatta questo genere di richiesta
         post("/authorization", (request, response) -> {
             //inizializza la risposta

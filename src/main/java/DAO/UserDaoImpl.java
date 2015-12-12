@@ -172,18 +172,16 @@ public class UserDaoImpl implements UserDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        //Object object = session.load(User.class, id_user);
-        //User user = (User)object;
-        //System.out.println(user.getName());
-        Query query = session.createQuery("update User set name=:name, surname=:surname, email =:email, role=:role, city=:city, rate=:rate where id_user=:id_user");
-        query.setParameter("id_user", id_user);
-        query.setParameter("name", name);
-        query.setParameter("surname", surname);
-        query.setParameter("email", email);
-        query.setParameter("role", role);
-        query.setParameter("city", city);
-        query.setParameter("rate", rate);
-        query.executeUpdate();
+        Object object = session.load(User.class, id_user);
+        User user = (User)object;
+        user.setName(name);
+        user.setSurname(surname);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setCity(city);
+        user.setRate(rate);
+
+
         session.getTransaction().commit();
         session.close();
 
