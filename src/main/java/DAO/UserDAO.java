@@ -12,7 +12,7 @@ public interface UserDAO {
     public void addUser(User user);
 
     //2: query per selezionare tutti gli user presenti nel db
-    public List<User>  getAllUsers();
+    public List<User> getAllUsers(String email);
 
     //3: query per cancellare uno user dal db utilizzando il suo id
     public void deleteUser(Integer id_user);
@@ -21,7 +21,7 @@ public interface UserDAO {
     public User getUser(String email);
 
     //5: query per selezionare una lista di user dati uno o piu' parametri
-    public List<User> getUserByAttributes(String nome, String surname, String city, double rate, String role);
+    public List<User> getUserByAttributes(String nome, String city, double rate, String role);
 
     //6: query utilizzata per il login che restituisce un user se la coppia email-password e' corretta
     public User getUserIfExist(String email, String password);
@@ -31,4 +31,6 @@ public interface UserDAO {
 
     //8: query per modificare i field di uno user
     public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate);
+
+    public List<User> getAllUsersWithMessage(int id_user);
 }

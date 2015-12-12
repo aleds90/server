@@ -33,7 +33,8 @@ public class UserController {
          */
 
         post("/users", (request, response) -> {
-            return userManager.getAllUsers();
+            List<User> userList = userManager.getAllUsers(request.queryParams("email"));
+            return userList;
         }, json());
 
         after((req, res) -> res.type("application/json"));
@@ -80,7 +81,9 @@ public class UserController {
          * /getFiltered url che gestisce tutte le ricerche che si possono effetuare tramite i parametri di: name surname city rate role
          */
         post("/getFiltered", (request, response) -> {
-            return userManager.getUserByAttributes(request.queryParams("name"), request.queryParams("surname"), request.queryParams("city"), check(request.queryParams("rate")), request.queryParams("role"));
+
+            List<User> list = userManager.getUserByAttributes(request.queryParams("name"), request.queryParams("city"), check(request.queryParams("rate")), request.queryParams("role"));
+            return list;
 
         }, json());
         /**
@@ -88,7 +91,9 @@ public class UserController {
          */
         post("/update", ((request, response) -> {
             //TODO sistemare i parametri che riceve dato che non sono ancora completi.
-            userManager.updateUser(Integer.parseInt(request.queryParams(("id_user"))), request.queryParams("name"), request.queryParams("surname"), request.queryParams("email"), request.queryParams("role"), request.queryParams("city"), Double.parseDouble(request.queryParams("rate")));
+            userManager.updateUser(Integer.parseInt(request.queryParams(("id_user"))), request.queryParams("name"),
+                    request.queryParams("surname"), request.queryParams("email"), request.queryParams("role"),
+                    request.queryParams("city"), Double.parseDouble(request.queryParams("rate")));
             return "ok";
         }));
 
@@ -177,6 +182,11 @@ public class UserController {
 
             return "Done";
         });
+
+
+        post("/getinContactUsers", (request, response) -> {
+            return userManager.getAllUsersWithMessage(Integer.parseInt(request.queryParams("id_user")));
+        }, json());
 
         post("/getMessages", (request, response) -> {
             List<Message> messageList;
