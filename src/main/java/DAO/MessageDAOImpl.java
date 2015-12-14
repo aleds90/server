@@ -59,6 +59,19 @@ public class MessageDAOImpl implements MessageDAO {
     }
 
     @Override
+    public List<Message> getMessageByTwoUser(User user,User me) {
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        List<Message> messageList = session.createQuery( "FROM Message WHERE ((id_sender="+user.getId_user()+"AND id_receiver="+ me.getId_user()
+                +")or (id_receiver="+user.getId_user()+"AND id_sender="+me.getId_user()+"))ORDER BY sendetAt ASC").list();
+        session.getTransaction().commit();
+        session.close();
+        return messageList;
+    }
+
+    @Override
     public List<User> getAllUsersWithMessage(int id_user) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();

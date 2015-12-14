@@ -200,6 +200,15 @@ public class UserController {
             return messageList;
         },json());
 
+        post("/getConversation", ((request, response) -> {
+            List<Message> messages;
+            User user = userManager.getUser(request.queryParams("user_mail"));
+            User me = userManager.getUser(request.queryParams("my_mail"));
+            messages = new MessageDAOImpl().getMessageByTwoUser(user,me);
+            return messages;
+
+        }),json());
+
     }
 
 
