@@ -1,8 +1,12 @@
 package Spark;
 
-import DAO.*;
-import Token.TokenManager;
-import spark.ResponseTransformer;
+import DAO.Follow.Follow;
+import DAO.Follow.FollowDaoImpl;
+import DAO.Message.Message;
+import DAO.Message.MessageDAOImpl;
+import DAO.User.User;
+import DAO.UserManager.UserManagerImpl;
+import DAO.Token.TokenManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -172,7 +176,7 @@ public class UserController {
         }));
 
         post("/setRead", (request, response) -> {
-            new MessageDAOImpl().setRead(Integer.parseInt(request.queryParams("id_reicever")),Integer.parseInt(request.queryParams("id_sender")));
+            new MessageDAOImpl().setRead(Integer.parseInt(request.queryParams("receiver")),Integer.parseInt(request.queryParams("sender")));
             return "Done";
         });
 

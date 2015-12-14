@@ -1,9 +1,9 @@
-import DAO.UserDaoImpl;
-import DAO.UserManagerImpl;
+import DAO.User.UserDaoImpl;
+import DAO.UserManager.UserManagerImpl;
 import Spark.LoginController;
 import Spark.UserController;
-import Token.ClientDAOImpl;
-import Token.TokenManager;
+import DAO.Client.ClientDAOImpl;
+import DAO.Token.TokenManager;
 
 public class Main {
     public static void main(String[] args){

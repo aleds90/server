@@ -20,12 +20,12 @@
         <property name="connection.pool_size">3</property>
         <property name="current_session_context_class">thread</property>
 
-        <mapping class="Token.Client"/>
-        <mapping class="Token.RefreshToken"/>
-        <mapping class="Token.AccessToken"/>
-        <mapping class="DAO.Follow"/>
-        <mapping class="DAO.Message"/>
-        <mapping class="DAO.User"/>
+        <mapping class="DAO.Client.Client"/>
+        <mapping class="DAO.Token.RefreshToken"/>
+        <mapping class="DAO.Token.AccessToken"/>
+        <mapping class="DAO.Follow.Follow"/>
+        <mapping class="DAO.Message.Message"/>
+        <mapping class="DAO.User.User"/>
 
         <!-- <mapping resource="com/mkyong/user/DBUser.hbm.xml"></mapping> -->
     </session-factory>
