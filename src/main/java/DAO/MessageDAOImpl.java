@@ -33,14 +33,14 @@ public class MessageDAOImpl implements MessageDAO {
     }
 
     @Override
-    public void setRead(Message message) {
+    public void setRead(int receiver, int sender) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        Query query = session.createQuery("update Message set read=1 where id_message=:id_message");
-        query.setParameter("id_message", message.getId_message());
-        query.executeUpdate();
+        session.createQuery("update Message set read=1 where (id_receiver="
+                +receiver+ " and id_sender="+sender+")").executeUpdate();
+
         session.getTransaction().commit();
         session.close();
     }
@@ -85,5 +85,7 @@ public class MessageDAOImpl implements MessageDAO {
         session.close();
         return userList;
     }
+
+
 
 }

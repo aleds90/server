@@ -172,14 +172,7 @@ public class UserController {
         }));
 
         post("/setRead", (request, response) -> {
-            Message message = new Message();
-
-            int id_message = Integer.parseInt(request.queryParams("id_message"));
-
-            message.setId_message(id_message);
-
-            new MessageDAOImpl().setRead(message);
-
+            new MessageDAOImpl().setRead(Integer.parseInt(request.queryParams("id_reicever")),Integer.parseInt(request.queryParams("id_sender")));
             return "Done";
         });
 
