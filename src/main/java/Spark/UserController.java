@@ -1,5 +1,6 @@
 package Spark;
 
+import DAO.*;
 import DAO.Follow.Follow;
 import DAO.Follow.FollowDaoImpl;
 import DAO.Message.Message;
@@ -7,6 +8,7 @@ import DAO.Message.MessageDAOImpl;
 import DAO.User.User;
 import DAO.UserManager.UserManagerImpl;
 import DAO.Token.TokenManager;
+import spark.ResponseTransformer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -161,9 +163,10 @@ public class UserController {
         post("/addMessage", ((request, response) -> {
             Message message = new Message();
 
-            User user_sender = userManager.getUser(request.queryParams("email_sender"));
-            User user_receiver = userManager.getUser(request.queryParams("email_receiver"));
+            User user_sender = userManager.getUser(request.queryParams("my_mail"));
+            User user_receiver = userManager.getUser(request.queryParams("user_mail"));
 
+            System.out.println(user_sender.getName());
             message.setId_sender(user_sender);
             message.setId_receiver(user_receiver);
             message.setText(request.queryParams("text"));
@@ -176,7 +179,9 @@ public class UserController {
         }));
 
         post("/setRead", (request, response) -> {
-            new MessageDAOImpl().setRead(Integer.parseInt(request.queryParams("receiver")),Integer.parseInt(request.queryParams("sender")));
+            User me = userManager.getUser(request.queryParams("my_mail"));
+            User user = userManager.getUser(request.queryParams("user_mail"));
+            new MessageDAOImpl().setRead(me, user);
             return "Done";
         });
 
