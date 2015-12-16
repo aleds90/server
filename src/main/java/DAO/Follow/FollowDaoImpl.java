@@ -58,12 +58,15 @@ public class FollowDaoImpl implements FollowDAO {
     }
 
     @Override
-    public void removeFollowing(Follow follow) {
+    public void removeFollowing(User user, User target) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        session.delete(follow);
+        Query query = session.createQuery("delete Follow WHERE id_user=:user and target_id_user=:target");
+        query.setParameter("user", user);
+        query.setParameter("target", target);
+        query.executeUpdate();
         session.getTransaction().commit();
         session.close();
     }
@@ -92,6 +95,19 @@ public class FollowDaoImpl implements FollowDAO {
         if(null != follow){
             return follow;
         } else{ return null;}
+    }
+
+    @Override
+    public boolean isFollowed(User user, User target) {
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        Query query = session.createQuery("FROM Follow where id_user=:user and target_id_user=:target");
+        query.setParameter("user", user);
+        query.setParameter("target", target);
+        Follow follow = (Follow) query.uniqueResult();
+        return !(follow == null);
     }
 
 
