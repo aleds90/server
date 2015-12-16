@@ -1,6 +1,5 @@
 package Spark;
 
-import DAO.*;
 import DAO.Follow.Follow;
 import DAO.Follow.FollowDaoImpl;
 import DAO.Message.Message;
@@ -8,7 +7,6 @@ import DAO.Message.MessageDAOImpl;
 import DAO.User.User;
 import DAO.UserManager.UserManagerImpl;
 import DAO.Token.TokenManager;
-import spark.ResponseTransformer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -129,35 +127,26 @@ public class UserController {
          * /addFollow url che viene chiama quando una persona inizia a seguirne un altra.
          */
         post("/addFollow", (request, response) -> {
-            Date date = new Date();
-            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")), userManager.getUser(request.queryParams("emailTarget")), date);
-            if (request.queryParams("emailUser") != request.queryParams("emailTarget")) {
-                new FollowDaoImpl().createFollowing(follow);
-                return "OK";
-            } else return "NO";
-        });
-
-        post("/addFollow", (request, response) -> {
-            Date date = new Date();
-            Follow follow = new Follow(userManager.getUser(request.queryParams("emailUser")), userManager.getUser(request.queryParams("emailTarget")), date);
+            FollowDaoImpl followDao = new FollowDaoImpl();
             User user = userManager.getUser(request.queryParams("emailUser"));
             User target = userManager.getUser(request.queryParams("emailTarget"));
-            if (user.getEmail() == target.getEmail()) {
-                return "NO";
-            } else if (new FollowDaoImpl().getFollow(user, target).equals(null)) {
-                new FollowDaoImpl().createFollowing(follow);
-                return "null";
-            } else {
-
-                return "NO";
+            boolean isFollowed = followDao.isFollowed(user, target);
+            System.out.print(isFollowed);
+            if(isFollowed){
+                new FollowDaoImpl().removeFollowing(user, target);
+                return "FOLLOW";
             }
-            // TODO NON ENTRA NEGLI IF E ELSEIF
-        });
+            else{
+                Follow follow = new Follow(user, target, new Date());
+                new FollowDaoImpl().createFollowing(follow);
+                return "Unfollow";
+            }
+            });
 
-        post("/deleteFollow", (request, response) -> {
-            Follow follow = new FollowDaoImpl().getFollow(userManager.getUser(request.queryParams("emailUser")), userManager.getUser(request.queryParams("emailTarget")));
-            new FollowDaoImpl().removeFollowing(follow);
-            return "OK";
+        post("/checkFollow", (request, response) -> {
+            User user = userManager.getUser(request.queryParams("emailUser"));
+            User target = userManager.getUser(request.queryParams("emailTarget"));
+            return new FollowDaoImpl().isFollowed(user, target);
         });
 
         post("/addMessage", ((request, response) -> {

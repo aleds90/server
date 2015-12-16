@@ -12,8 +12,9 @@ public interface FollowDAO {
     public List<User> getFollowersByUser(int target_id_user);
     public List<User> getFollowedByUser(int id_user);
     public void createFollowing(Follow follow);
-    public void removeFollowing(Follow follow);
+    public void removeFollowing(User user, User target);
     public void removeAllFollowersByUser(int id_user);
     public Follow getFollow (User user,User target);
+    public boolean isFollowed(User user, User target);
 
 }
