@@ -4,6 +4,8 @@ import DAO.Follow.Follow;
 import DAO.Follow.FollowDaoImpl;
 import DAO.Message.Message;
 import DAO.Message.MessageDAOImpl;
+import DAO.Notice.Notice;
+import DAO.Notice.NoticeDAOImpl;
 import DAO.User.User;
 import DAO.UserManager.UserManagerImpl;
 import DAO.Token.TokenManager;
@@ -50,7 +52,14 @@ public class UserController {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date bday = formatter.parse(request.queryParams("bday"));
             double rate = Double.parseDouble(request.queryParams("rate"));
-            User user = new User(request.queryParams("name"), request.queryParams("surname"), request.queryParams("email"), request.queryParams("password"), bday, request.queryParams("role"), request.queryParams("city"), rate);
+            String name = request.queryParams("name");
+            String surname = request.queryParams("surname");
+            String email = request.queryParams("email");
+            String password = request.queryParams("password");
+            String role = request.queryParams("role");
+            String city = request.queryParams("city");
+            String description = "Inserisci descrizione";
+            User user = new User(name, surname, email, password, bday, role, city, rate, true, description);
             if (userManager.getUser(request.queryParams("email")) == null) {
                 userManager.addUser(user);
                 return "OK";
@@ -95,9 +104,16 @@ public class UserController {
          */
         post("/update", ((request, response) -> {
             //TODO sistemare i parametri che riceve dato che non sono ancora completi.
-            userManager.updateUser(Integer.parseInt(request.queryParams(("id_user"))), request.queryParams("name"),
-                    request.queryParams("surname"), request.queryParams("email"), request.queryParams("role"),
-                    request.queryParams("city"), Double.parseDouble(request.queryParams("rate")));
+            int id_user = Integer.parseInt(request.queryParams(("id_user")));
+            String name = request.queryParams("name");
+            String surname = request.queryParams("surname");
+            String email = request.queryParams("email");
+            String role = request.queryParams("role");
+            String city = request.queryParams("city");
+            double rate = Double.parseDouble(request.queryParams("rate"));
+            boolean status = Boolean.parseBoolean(request.queryParams("status"));
+            String description = request.queryParams("description");
+            userManager.updateUser(id_user, name, surname, email, role, city,rate, status, description);
             return "ok";
         }));
 
@@ -200,6 +216,22 @@ public class UserController {
 
         }),json());
 
+        post("/addNotice", (request, response) -> {
+            String email = request.queryParams("email");
+            User user = userManager.getUser(email);
+            String text = request.queryParams("notice_text");
+            Date notice_date = new Date();
+            Notice notice = new Notice(user, text, notice_date);
+            new NoticeDAOImpl().insert_notice(notice);
+            return "OK";
+        });
+
+        post("getNotice", (request, response) -> {
+            String email = request.queryParams("email");
+            User user = userManager.getUser(email);
+            List<Notice> noticeList = new NoticeDAOImpl().get_user_notice(user);
+            return noticeList;
+        },json());
     }
 
 
