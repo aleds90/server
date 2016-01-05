@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        List<User> userList = session.createQuery("from User WHERE email!=:email and role is not null")
+        List<User> userList = session.createQuery("from User WHERE email!=:email and role is not null ORDER BY RAND()").setMaxResults(8)
                 .setParameter("email", email).list();
         session.getTransaction().commit();
         session.close();
