@@ -25,12 +25,10 @@ public class User {
     private String role;// ruolo che identifica il lavoro dell'utente
     private String city;// citta' in cui lavora
     private double rate;//costo orario medio del servizio che lo user offre
+    private boolean active;
+    private String description;
 
-    /**
-     *
-     * Costruttore con tutti gli attributi della classe.
-     */
-    public User(String name, String surname, String email, String password, Date bday, String role,String city, double rate) {
+    public User(String name, String surname, String email, String password, Date bday, String role, String city, double rate, boolean active, String description) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -39,7 +37,16 @@ public class User {
         this.role = role;
         this.city = city;
         this.rate = rate;
+        this.active = active;
+        this.description = description;
     }
+
+    /**
+     *
+     * Costruttore con tutti gli attributi della classe.
+     */
+
+
 
     public User(){}
 
@@ -121,5 +128,24 @@ public class User {
     public void setRate(double rate) {
         this.rate = rate;
     }
+
+    @Column(table = "userdetails", columnDefinition = "tinyint default false")
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Column (table = "userdetails")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 
 }

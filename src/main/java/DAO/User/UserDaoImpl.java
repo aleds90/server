@@ -45,7 +45,10 @@ public class UserDaoImpl implements UserDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        List<User> userList = session.createQuery("from User WHERE email!=:email and role is not null ORDER BY RAND()").setMaxResults(8)
+
+
+        List<User> userList = session.createQuery("from User WHERE email!=:email and role is not null order by rand()").setMaxResults(7)
+
                 .setParameter("email", email).list();
         session.getTransaction().commit();
         session.close();
@@ -168,7 +171,8 @@ public class UserDaoImpl implements UserDAO {
     /**
      * 8: query che permette di modificare uno user
      */
-    public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){
+    public void updateUser(int id_user, String name, String surname, String email, String role, String city,
+                           double rate, boolean status, String description){
         if (!session.isOpen()){
             session = sessionFactory.openSession();
         }
@@ -203,6 +207,9 @@ public class UserDaoImpl implements UserDAO {
         session.close();
         return userList;
     }
+
+
+
 
 
     //metodo che setta la rate ad un valore alto se non viene inserita un valore nella richiesta

@@ -45,8 +45,9 @@ public class UserManagerImpl implements UserManager {
         return userDAO.authentication(email, password);
     }
 
-    public void updateUser(int id_user, String name, String surname, String email, String role, String city, double rate ){
-        userDAO.updateUser(id_user, name, surname, email, role, city, rate);
+    public void updateUser(int id_user, String name, String surname, String email, String role, String city,
+                           double rate, boolean status, String description ){
+        userDAO.updateUser(id_user, name, surname, email, role, city, rate, status, description);
     };
 
     public List<User> getAllUsersWithMessage(int id_user) {
