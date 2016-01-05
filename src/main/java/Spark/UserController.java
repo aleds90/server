@@ -13,6 +13,7 @@ import DAO.User.User;
 import DAO.UserManager.UserManagerImpl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -258,7 +259,13 @@ public class UserController {
         post("countFeedback", (request, response) -> {
             String user_email = request.queryParams("user_email");
             User user = userManager.getUser(user_email);
-            int count = new FeedbackDAOImpl().get_count_feedback(user);
+            int count_f = new FeedbackDAOImpl().get_count_feedback(user);
+            int count_followers = new FollowDaoImpl().getFollowersByUser(user.getId_user()).size();
+            int count_followed = new FollowDaoImpl().getFollowedByUser(user.getId_user()).size();
+            ArrayList<Integer> count = new ArrayList<Integer>();
+            count.add(count_f);
+            count.add(count_followers);
+            count.add(count_followed);
             return count;
         });
     }
