@@ -1,7 +1,5 @@
 package DAO.User;
 
-import DAO.User.User;
-
 import java.util.List;
 
 /**
