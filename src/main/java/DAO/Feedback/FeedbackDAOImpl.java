@@ -53,7 +53,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        Query query = session.createQuery("select count(id_feedback) from Feedback where id_user=:user");
+        Query query = session.createQuery("select count(id_feedback) from Feedback where id_target=:user");
         query.setParameter("user", id_user);
         int cout = ((Long) query.uniqueResult()).intValue();
         session.getTransaction().commit();

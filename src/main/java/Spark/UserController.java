@@ -10,6 +10,7 @@ import DAO.Notice.Notice;
 import DAO.Notice.NoticeDAOImpl;
 import DAO.Token.TokenManager;
 import DAO.User.User;
+import DAO.UserManager.UserManager;
 import DAO.UserManager.UserManagerImpl;
 
 import java.text.SimpleDateFormat;
@@ -124,7 +125,8 @@ public class UserController {
          * /getFollowers url che dato un id_utente andra' ad individuare tutti gli users che seguono questo utente.
          */
         post("/getFollowers", ((request, response) -> {
-            List<User> userList = new FollowDaoImpl().getFollowersByUser(Integer.parseInt(request.queryParams("target_id_user")));
+            User user = userManager.getUser(request.queryParams("email"));
+            List<User> userList = new FollowDaoImpl().getFollowersByUser(user);
             return userList;
         }), json());
 
@@ -138,7 +140,8 @@ public class UserController {
          * /getFollowed url che dato un id_utente andra' ad individuare tutti gli users che l'utente segue
          */
         post("/getFollowed", ((request, response) -> {
-            List<User> userList = new FollowDaoImpl().getFollowedByUser(Integer.parseInt(request.queryParams("id_user")));
+            User user = userManager.getUser(request.queryParams("email"));
+            List<User> userList = new FollowDaoImpl().getFollowedByUser(user);
             return userList;
         }), json());
 
@@ -260,14 +263,14 @@ public class UserController {
             String user_email = request.queryParams("user_email");
             User user = userManager.getUser(user_email);
             int count_f = new FeedbackDAOImpl().get_count_feedback(user);
-            int count_followers = new FollowDaoImpl().getFollowersByUser(user.getId_user()).size();
-            int count_followed = new FollowDaoImpl().getFollowedByUser(user.getId_user()).size();
+            int count_followers = new FollowDaoImpl().getFollowersByUser(user).size();
+            int count_followed = new FollowDaoImpl().getFollowedByUser(user).size();
             ArrayList<Integer> count = new ArrayList<Integer>();
             count.add(count_f);
             count.add(count_followers);
             count.add(count_followed);
             return count;
-        });
+        },json());
     }
 
 

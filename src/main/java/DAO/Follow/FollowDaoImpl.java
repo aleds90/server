@@ -21,25 +21,25 @@ public class FollowDaoImpl implements FollowDAO {
     }
 
     @Override
-    public List<User> getFollowersByUser(int target_id_user) {
+    public List<User> getFollowersByUser(User target_id_user) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
-        List<User> userList= session.createQuery("from User where id_user in(select id_user from Follow where target_id_user="+target_id_user+")").list();
+        List<User> userList= session.createQuery("from User where id_user in(select id_user from Follow where target_id_user=:user)").setParameter("user", target_id_user).list();
         session.getTransaction().commit();
         session.close();
         return userList;
     }
 
     @Override
-    public List<User> getFollowedByUser(int id_user) {
+    public List<User> getFollowedByUser(User id_user) {
         if(!session.isOpen()){
             session = sessionFactory.openSession();
         }
         session.getTransaction().begin();
         List<User> userList= session.createQuery(" from " +
-                "User where id_user in(select target_id_user from Follow where id_user="+id_user+")").list();
+                "User where id_user in(select target_id_user from Follow where id_user=:user)").setParameter("user",id_user).list();
         session.getTransaction().commit();
         session.close();
         return userList;
