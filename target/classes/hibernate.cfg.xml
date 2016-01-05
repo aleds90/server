@@ -27,7 +27,7 @@
         <mapping class="DAO.Message.Message"/>
         <mapping class="DAO.User.User"/>
         <mapping class="DAO.Notice.Notice"/>
-
+        <mapping class="DAO.Feedback.Feedback"/>
 
         <!-- <mapping resource="com/mkyong/user/DBUser.hbm.xml"></mapping> -->
     </session-factory>

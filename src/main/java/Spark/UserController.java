@@ -1,14 +1,16 @@
 package Spark;
 
+import DAO.Feedback.Feedback;
+import DAO.Feedback.FeedbackDAOImpl;
 import DAO.Follow.Follow;
 import DAO.Follow.FollowDaoImpl;
 import DAO.Message.Message;
 import DAO.Message.MessageDAOImpl;
 import DAO.Notice.Notice;
 import DAO.Notice.NoticeDAOImpl;
+import DAO.Token.TokenManager;
 import DAO.User.User;
 import DAO.UserManager.UserManagerImpl;
-import DAO.Token.TokenManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -232,6 +234,33 @@ public class UserController {
             List<Notice> noticeList = new NoticeDAOImpl().get_user_notice(user);
             return noticeList;
         },json());
+
+        post("addFeedback", (request, response) -> {
+            String user_email = request.queryParams("user_email");
+            String target_email = request.queryParams("target_email");
+            Date date = new Date();
+            User user = userManager.getUser(user_email);
+            User target = userManager.getUser(target_email);
+            Feedback f = new Feedback(user, target, date);
+            new FeedbackDAOImpl().add_feedback(f);
+            return "OK";
+        });
+
+        post("removeFeedback", (request, response) -> {
+            String user_email = request.queryParams("user_email");
+            String target_email = request.queryParams("target_email");
+            User user = userManager.getUser(user_email);
+            User target = userManager.getUser(target_email);
+            new FeedbackDAOImpl().remove_feedback(user, target);
+            return "OK";
+        });
+
+        post("countFeedback", (request, response) -> {
+            String user_email = request.queryParams("user_email");
+            User user = userManager.getUser(user_email);
+            int count = new FeedbackDAOImpl().get_count_feedback(user);
+            return count;
+        });
     }
 
 
