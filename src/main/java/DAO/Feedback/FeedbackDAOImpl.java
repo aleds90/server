@@ -60,4 +60,23 @@ public class FeedbackDAOImpl implements FeedbackDAO {
         session.close();
         return cout;
     }
+
+    @Override
+    public boolean check_feedack(User id_user, User tardet_id) {
+        if (!session.isOpen()) {
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+        boolean result = false;
+
+        Query query = session.createQuery(" from Feedback" +
+                " where id_target=:target and id_user=:user and Datediff(now(), date_feedback) = 0 ");
+
+        query.setParameter("target", tardet_id);
+        query.setParameter("user", id_user);
+
+        result = query.list().isEmpty();
+
+        return result;
+    }
 }

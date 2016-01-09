@@ -12,4 +12,6 @@ public interface FeedbackDAO {
     public void remove_feedback(User id_user, User id_target);
 
     public int get_count_feedback(User id_user);
+
+    public boolean check_feedack(User id_user, User tardet_id);
 }

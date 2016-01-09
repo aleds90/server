@@ -288,6 +288,16 @@ public class UserController {
             count.add(count_followed);
             return count;
         },json());
+
+        post("checkFeedback", (request, response) -> {
+            String user_email = request.queryParams("user_email");
+            String target_email = request.queryParams("target_email");
+            User user = userManager.getUser(user_email);
+            User target = userManager.getUser(target_email);
+
+            boolean result = new FeedbackDAOImpl().check_feedack(user, target);
+            return  Boolean.toString(result);
+        });
     }
 
 
