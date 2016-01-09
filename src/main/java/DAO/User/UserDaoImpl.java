@@ -187,6 +187,8 @@ public class UserDaoImpl implements UserDAO {
         user.setRole(role);
         user.setCity(city);
         user.setRate(rate);
+        user.setActive(status);
+        user.setDescription(description);
         session.getTransaction().commit();
         session.close();
 

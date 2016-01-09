@@ -108,6 +108,7 @@ public class UserController {
          */
         post("/update", ((request, response) -> {
             //TODO sistemare i parametri che riceve dato che non sono ancora completi.
+
             int id_user = Integer.parseInt(request.queryParams(("id_user")));
             String name = request.queryParams("name");
             String surname = request.queryParams("surname");
@@ -117,6 +118,10 @@ public class UserController {
             double rate = Double.parseDouble(request.queryParams("rate"));
             boolean status = Boolean.parseBoolean(request.queryParams("status"));
             String description = request.queryParams("description");
+            User user = userManager.getUser(email);
+            String notice = request.queryParams("notice");
+            Notice notice1 =  new Notice(user,notice,new Date());
+            new NoticeDAOImpl().insert_notice(notice1);
             userManager.updateUser(id_user, name, surname, email, role, city,rate, status, description);
             return "ok";
         }));
