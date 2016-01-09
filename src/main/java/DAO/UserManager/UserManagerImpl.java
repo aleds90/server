@@ -54,4 +54,9 @@ public class UserManagerImpl implements UserManager {
         return userDAO.getAllUsersWithMessage(id_user);
     }
 
+    @Override
+    public void updateStatus(User user) {
+        userDAO.updateStatus(user);
+    }
+
 }

@@ -126,6 +126,18 @@ public class UserController {
             return "ok";
         }));
 
+        post("/updateStatus", ((request, response) -> {
+            //TODO sistemare i parametri che riceve dato che non sono ancora completi.
+
+
+            String email = request.queryParams("email");
+            boolean status = Boolean.parseBoolean(request.queryParams("status"));
+            User user = userManager.getUser(email);
+ ;          user.setActive(status);
+            userManager.updateStatus(user);
+            return "ok";
+        }));
+
         /**
          * /getFollowers url che dato un id_utente andra' ad individuare tutti gli users che seguono questo utente.
          */

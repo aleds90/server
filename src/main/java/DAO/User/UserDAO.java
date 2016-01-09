@@ -35,5 +35,7 @@ public interface UserDAO {
 
     public List<User> getAllUsersWithMessage(int id_user);
 
+    public void updateStatus(User user);
+
 
 }

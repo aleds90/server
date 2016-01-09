@@ -1,7 +1,6 @@
 package DAO.User;
 
-import DAO.User.User;
-import DAO.User.UserDAO;
+
 import Hibernate.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -210,8 +209,19 @@ public class UserDaoImpl implements UserDAO {
         return userList;
     }
 
+    @Override
+    public void updateStatus(User user) {
+        if (!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
 
-
+        Object object = session.load(User.class, user.getId_user());
+        User updateduser = (User) object;
+        updateduser.setActive(user.isActive());
+        session.getTransaction().commit();
+        session.close();
+    }
 
 
     //metodo che setta la rate ad un valore alto se non viene inserita un valore nella richiesta
