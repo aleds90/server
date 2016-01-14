@@ -13,11 +13,16 @@ import DAO.User.User;
 import DAO.UserManager.UserManager;
 import DAO.UserManager.UserManagerImpl;
 
+import javax.imageio.ImageIO;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -157,10 +162,20 @@ public class UserController {
 
 
         post("/save", (request, response) -> {
-            MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/home/jns/Documents/server");
+
+            String name = request.queryParams("nome");
+            String file = request.queryParams("file");
+
+            InputStream image = new ByteArrayInputStream(Base64.getDecoder().decode(file.getBytes()));
+            BufferedImage bufferedImage = ImageIO.read(image);
+            File file_image = new File(name+".png");
+            ImageIO.write(bufferedImage, "png", file_image);
+
+           /* MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/home/jns/Documents/server");
             request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
 
-            return request.raw().getPart("file").getName();//image.getName();
+            return request.raw().getPart("file").getName();//image.getName();*/
+            return "OK";
         });
     }
 
