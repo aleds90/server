@@ -24,6 +24,7 @@ public class Feedback {
         this.date_feedback = date_feedback;
     }
 
+    public Feedback(){}
 
     @Id
     @GeneratedValue

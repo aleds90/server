@@ -107,6 +107,8 @@ public class FollowDaoImpl implements FollowDAO {
         query.setParameter("user", user);
         query.setParameter("target", target);
         Follow follow = (Follow) query.uniqueResult();
+        session.getTransaction().commit();
+        session.close();
         return !(follow == null);
     }
 

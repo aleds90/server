@@ -13,6 +13,9 @@ import DAO.User.User;
 import DAO.UserManager.UserManager;
 import DAO.UserManager.UserManagerImpl;
 
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,8 +154,15 @@ public class UserController {
         post("/getinContactUsers", (request, response) -> {
             return userManager.getAllUsersWithMessage(Integer.parseInt(request.queryParams("id_user")));
         }, json());
-    }
 
+
+        post("/save", (request, response) -> {
+            MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/home/jns/Documents/server");
+            request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
+
+            return request.raw().getPart("file").getName();//image.getName();
+        });
+    }
 
 
     //metodo utilizzato per gestire le chiamate con un parametro rate all'interno. in particolare se rate non viene compilato questo viene impostato come max value nelle ricerche
@@ -162,4 +172,5 @@ public class UserController {
         }
         return Double.parseDouble(rate);
     }
+
 }

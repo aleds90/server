@@ -69,6 +69,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
         session.getTransaction().begin();
         boolean result = false;
 
+        // True se siamo abbilitati a lasciare un feed, sennó false
         Query query = session.createQuery(" from Feedback" +
                 " where id_target=:target and id_user=:user and Datediff(now(), date_feedback) = 0 ");
 
@@ -77,6 +78,8 @@ public class FeedbackDAOImpl implements FeedbackDAO {
 
         result = query.list().isEmpty();
 
+        session.getTransaction().commit();
+        session.close();
         return result;
     }
 }

@@ -16,7 +16,6 @@ import static spark.Spark.*;
  */
 public class FeedbackController {
 
-
     public FeedbackController(final UserManagerImpl userManager, final FeedbackDAOImpl feedbackDAO,
                               final  FollowDaoImpl followDao){
 
