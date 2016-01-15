@@ -74,5 +74,13 @@ public class MessageController {
             List<User> list = new MessageDAOImpl().getAllUsersWithMessage(Integer.parseInt(request1.queryParams("id_user")));
             return list;
         }),json());
+
+
+        post("/checkMessage", (request, response) -> {
+            String user_email = request.queryParams("user_email");
+            User user = userManager.getUser(user_email);
+            int count = messageDAO.number_messages_not_read(user);
+            return  count;
+        });
     }
 }

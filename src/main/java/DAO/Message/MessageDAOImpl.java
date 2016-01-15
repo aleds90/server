@@ -2,6 +2,7 @@ package DAO.Message;
 
 import DAO.User.User;
 import Hibernate.HibernateUtil;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import java.util.List;
@@ -69,6 +70,27 @@ public class MessageDAOImpl implements MessageDAO {
         session.getTransaction().commit();
         session.close();
         return messageList;
+    }
+
+    @Override
+    public int number_messages_not_read(User user) {
+        if(!session.isOpen()){
+            session = sessionFactory.openSession();
+        }
+        session.getTransaction().begin();
+
+        Query query = session.createQuery("select count(distinct id_sender) " +
+                "from Message" +
+                " where (id_receiver=:user) and (read=false)");
+        query.setParameter("user",user);
+
+
+        int count = (int)(long)query.uniqueResult();
+
+
+        session.getTransaction().commit();
+        session.close();
+        return count;
     }
 
     @Override
